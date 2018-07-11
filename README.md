@@ -52,13 +52,14 @@ class Graph:
                 if edge not in path:
                     p = path[:]
                     p.append(edge)
+                    v.visited = True
                     if v == edge.v1:
-                        v.visited = True
                         self.detect_cycles(p,edge.v2)
                     else:
-                        v.visited = True
                         self.detect_cycles(p,edge.v1)
-           
+
+    def connect_MST(self):
+        
 
     def __str__(self):
         print("----Verticies----")
@@ -85,9 +86,9 @@ if __name__ == "__main__":
     graph.add_vertex(v6)
     e1 = Edge(v1,v2)
     e2 = Edge(v2,v3)
-    e3 = Edge(v2,v4)
-    e4 = Edge(v3,v5)
-    e5 = Edge(v4,v5)
+    e3 = Edge(v3,v4)
+    e4 = Edge(v4,v5)
+    e5 = Edge(v5,v6)
     e6 = Edge(v1,v6)
     graph.add_edge(e1)
     graph.add_edge(e2)
@@ -99,6 +100,10 @@ if __name__ == "__main__":
     print(graph)
 
 
+
+
+    
+    
 
 
     
