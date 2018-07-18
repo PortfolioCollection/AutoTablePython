@@ -1,114 +1,106 @@
-from Course import*
+class Vertex:
+    def __init__(self,name,code,start,end):
+        self.name = name
+        self.code = code
+        self.start = start
+        self.end = end
+        self.edges = []
+        self.combinations = 1
 
-class Builder:
-    def __init__(self, AutoTable):
-        self.AutoTable = AutoTable
+    def __str__(self):
+        return "Vertex: "+self.name+" "+self.code+" "+self.start+" "+self.end
 
+class Edge:
+    def __init__(self, v1,v2):
+        self.v1 = v1
+        self.v2 = v2
+        self.distance = 1000
 
-    def build_table(self):
-        csc324 = Course("csc324")
-        lec101 = Lecture("0101","Wed",13,15)
-        lec102 = Lecture("0102","Wed",17,19)
-        pra101 = Practical("0101","Fri",11,12)
-        pra102 = Practical("0102","Fri",11,12)
-        pra103 = Practical("0103","Fri",12,13)
-        pra104 = Practical("0104","Fri",12,13)
-        pra105 = Practical("0105","Fri",13,14)
-        csc324.add_section(lec101)
-        csc324.add_section(lec102)
-        csc324.add_section(pra101)
-        csc324.add_section(pra102)
-        csc324.add_section(pra103)
-        csc324.add_section(pra104)
-        csc324.add_section(pra105)
-        
-        csc347 = Course("csc347")
-        lec101 = Lecture("0101","Fri",15,17)
-        pra101 = Practical("0101","Wed",11,12)
-        pra102 = Practical("0102","Wed",15,16)
-        csc347.add_section(lec101)
-        csc347.add_section(pra101)
-        csc347.add_section(pra102)
+    def set_distance(self,distance):
+        self.distance = distance
 
-        csc369 = Course("csc369")
-        lec101 = Lecture("0101","Mon",9,11)
-        lec102 = Lecture("0102","Mon",13,15)
-        pra101 = Practical("0101","Thu",9,10)
-        pra102 = Practical("0102","Thu",9,10)
-        pra103 = Practical("0103","Thu",10,11)
-        pra104 = Practical("0104","Thu",10,11)
-        csc369.add_section(lec101)
-        csc369.add_section(lec102)
-        csc369.add_section(pra101)
-        csc369.add_section(pra102)
-        csc369.add_section(pra103)
-        csc369.add_section(pra104)
-
-        mat301 = Course("mat301")
-        lec101 = Lecture("0101","Wed",11,13)
-        lec102 = Lecture("0101","Fri",9,10)
-        tut101 = Tutorial("0101","Wed",9,10)
-        tut102 = Tutorial("0102","Wed",15,11)
-        tut103 = Tutorial("0103","Wed",13,14)
-        mat301.add_section(lec101)
-        mat301.add_section(lec102)
-        mat301.add_section(tut101)
-        mat301.add_section(tut102)
-        mat301.add_section(tut103)
-
-        csc338 = Course("csc338")
-        lec101 = Lecture("0101","Wed",15,17)
-        tut101 = Tutorial("0101","Fri",13,14)
-        tut102 = Tutorial("0102","Fri",14,15)
-        csc338.add_section(lec101)
-        csc338.add_section(tut101)
-        csc338.add_section(tut102)
-
-        csc343 = Course("csc343")
-        lec101 = Lecture("0101","Mon",9,11)
-        pra101 = Practical("0101","Thu",13,14)
-        pra102 = Practical("0102","Wed",14,15)
-        csc343.add_section(lec101)
-        csc343.add_section(pra101)
-        csc343.add_section(pra102)
-
-        csc363 = Course("csc363")
-        lec101 = Lecture("0101","Mon",11,13)
-        lec102 = Lecture("0102","Thu",18,20)
-        tut101 = Tutorial("0101","Wed",13,14)
-        tut102 = Tutorial("0102","Wed",13,14)
-        tut103 = Tutorial("0103","Wed",14,15)
-        tut104 = Tutorial("0104","Wed",14,15)
-        csc363.add_section(lec101)
-        csc363.add_section(lec102)
-        csc363.add_section(tut101)
-        csc363.add_section(tut102)
-        csc363.add_section(tut103)
-        csc363.add_section(tut104)
-
-        csc384 = Course("csc384")
-        lec101 = Lecture("0101","Wed",11,13)
-        tut101 = Tutorial("0101","Tue",16,17)
-        tut102 = Tutorial("0102","Tue",17,18)
-        tut103 = Tutorial("0103","Tue",17,18)
-        csc384.add_section(lec101)
-        csc384.add_section(tut101)
-        csc384.add_section(tut102)
-        csc384.add_section(tut103)
-        
-    
-        self.AutoTable.add_course(csc324)
-        self.AutoTable.add_course(csc347)
-        self.AutoTable.add_course(csc369)
-        self.AutoTable.add_course(mat301)
-
-        self.AutoTable.add_course(csc338)
-        self.AutoTable.add_course(csc343)
-        self.AutoTable.add_course(csc363)
-        self.AutoTable.add_course(csc384)
-        
+    def __str__(self):
+        return str((str(self.v1),str(self.v2),self.distance))
 
 
+class Cast:
+    def __init__(self,name):
+        self.name = name
+        self.verticies = []
+        self.edges = []
 
-        return self.AutoTable
-        
+    def add_vertex(self,vertex):
+        vertecies.append(vertex)
+
+    def connect_graph(self):
+        for i in range(len(self.verticies)):
+            for j in range(i+1,len(self.verticies)):
+                self.add_edge(self.verticies[i],self.verticies[j])
+
+    def add_edge(self,v1,v2):
+        edge = Edge(v1,v2)
+        v1.edges.append(edge)
+        v2.edges.append(edge)
+        self.edges.append(edge)
+
+class Graph:
+    def __init__(self):
+        self.casts = []
+        self.verticies = []
+        self.edges = []
+
+    def add_course(self,course):
+        course_vertex = []
+        tup = course.compress_times()
+        i = 0
+        for lecture in tup[0]:
+            time = lecture.split()
+            vertex = Vertex(course.name,"lec"+tup[0][lecture][0],time[0],time[1])
+            course_vertex.append(vertex)
+            i+= 1
+        if i > 0:
+            vertex.combinations *= i
+        i = 0
+        for tutorial in tup[1]:
+            time = tutorial.split()
+            vertex = Vertex(course.name,"tut"+tup[1][tutorial][0],time[0],time[1])
+            course_vertex.append(vertex)
+            i+= 1
+        if i > 0:
+            vertex.combinations *= i
+        i = 0
+        for practical in tup[2]:
+            time = practical.split()
+            vertex = Vertex(course.name,"pra"+tup[2][practical][0],time[0],time[1])
+            course_vertex.append(vertex)
+            i+= 1
+        if i > 0:
+            vertex.combinations *= i
+        self.verticies.extend(course_vertex)
+
+    def connect_graph(self):
+        index = 0
+        for i in range(len(self.verticies)):
+            for j in range(i+1,len(self.verticies)):
+                #index += 1
+                #print "#"+str(index)+": "+str((str(self.verticies[i]),str(self.verticies[j])))
+                self.add_edge(self.verticies[i],self.verticies[j])
+
+    def add_edge(self,v1,v2):
+        edge = Edge(v1,v2)
+        v1.edges.append(edge)
+        v2.edges.append(edge)
+        self.edges.append(edge)
+            
+
+
+    def __str__(self):
+        string = ""
+        i=0
+        permutations = 1
+        for vertex in self.verticies:
+            i+=1
+            permutations *= vertex.combinations
+            string += str(i)+": "+str(vertex) + "\n"
+        print("Permutations: "+str(permutations))
+        return string
