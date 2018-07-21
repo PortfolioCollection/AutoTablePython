@@ -46,45 +46,61 @@ class Cast:
 class Graph:
     def __init__(self):
         self.casts = []
-        self.verticies = []
         self.edges = []
 
     def add_course(self,course):
         course_vertex = []
         tup = course.compress_times()
         i = 0
+        name = course.name+" lectures"
+        cast = Cast(name)
         for lecture in tup[0]:
             time = lecture.split()
             vertex = Vertex(course.name,"lec"+tup[0][lecture][0],time[0],time[1])
-            course_vertex.append(vertex)
+            cast.verticies.append(vertex)
             i+= 1
         if i > 0:
+            self.casts.append(cast)
             vertex.combinations *= i
         i = 0
+        name = course.name+" tutorials"
+        cast = Cast(name)
         for tutorial in tup[1]:
             time = tutorial.split()
             vertex = Vertex(course.name,"tut"+tup[1][tutorial][0],time[0],time[1])
-            course_vertex.append(vertex)
+            cast.verticies.append(vertex)
             i+= 1
+        
         if i > 0:
+            self.casts.append(cast)
             vertex.combinations *= i
         i = 0
+        name = course.name+" practicals"
+        cast = Cast(name)
         for practical in tup[2]:
             time = practical.split()
             vertex = Vertex(course.name,"pra"+tup[2][practical][0],time[0],time[1])
-            course_vertex.append(vertex)
+            cast.verticies.append(vertex)
             i+= 1
         if i > 0:
+            self.casts.append(cast)
             vertex.combinations *= i
-        self.verticies.extend(course_vertex)
 
     def connect_graph(self):
         index = 0
-        for i in range(len(self.verticies)):
-            for j in range(i+1,len(self.verticies)):
+        for i in range(len(self.casts)):
+            for j in range(i+1,len(self.casts)):
                 #index += 1
                 #print "#"+str(index)+": "+str((str(self.verticies[i]),str(self.verticies[j])))
-                self.add_edge(self.verticies[i],self.verticies[j])
+                #self.add_edge(self.verticies[i],self.verticies[j])
+                self.connect_casts(self.casts[i],self.casts[j])
+
+    def connect_casts(self,cast1,cast2):
+        for i in range(len(cast1.verticies)):
+            for j in range(i+1,len(cast2.verticies)):
+                self.add_edge(cast1.verticies[i], cast2.verticies[j])
+        
+        
 
     def add_edge(self,v1,v2):
         edge = Edge(v1,v2)
@@ -98,9 +114,10 @@ class Graph:
         string = ""
         i=0
         permutations = 1
-        for vertex in self.verticies:
-            i+=1
-            permutations *= vertex.combinations
-            string += str(i)+": "+str(vertex) + "\n"
+        for cast in self.casts:
+            for vertex in cast.verticies:
+                i+=1
+                permutations *= vertex.combinations
+                string += str(i)+": "+str(vertex) + "\n"
         print("Permutations: "+str(permutations))
         return string

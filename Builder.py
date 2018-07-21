@@ -55,57 +55,11 @@ class Builder:
         mat301.add_section(tut101)
         mat301.add_section(tut102)
         mat301.add_section(tut103)
-
-        csc338 = Course("csc338")
-        lec101 = Lecture("0101","Wed",15,17)
-        tut101 = Tutorial("0101","Fri",13,14)
-        tut102 = Tutorial("0102","Fri",14,15)
-        csc338.add_section(lec101)
-        csc338.add_section(tut101)
-        csc338.add_section(tut102)
-
-        csc343 = Course("csc343")
-        lec101 = Lecture("0101","Mon",9,11)
-        pra101 = Practical("0101","Thu",13,14)
-        pra102 = Practical("0102","Wed",14,15)
-        csc343.add_section(lec101)
-        csc343.add_section(pra101)
-        csc343.add_section(pra102)
-
-        csc363 = Course("csc363")
-        lec101 = Lecture("0101","Mon",11,13)
-        lec102 = Lecture("0102","Thu",18,20)
-        tut101 = Tutorial("0101","Wed",13,14)
-        tut102 = Tutorial("0102","Wed",13,14)
-        tut103 = Tutorial("0103","Wed",14,15)
-        tut104 = Tutorial("0104","Wed",14,15)
-        csc363.add_section(lec101)
-        csc363.add_section(lec102)
-        csc363.add_section(tut101)
-        csc363.add_section(tut102)
-        csc363.add_section(tut103)
-        csc363.add_section(tut104)
-
-        csc384 = Course("csc384")
-        lec101 = Lecture("0101","Wed",11,13)
-        tut101 = Tutorial("0101","Tue",16,17)
-        tut102 = Tutorial("0102","Tue",17,18)
-        tut103 = Tutorial("0103","Tue",17,18)
-        csc384.add_section(lec101)
-        csc384.add_section(tut101)
-        csc384.add_section(tut102)
-        csc384.add_section(tut103)
         
-    
         self.AutoTable.add_course(csc324)
         self.AutoTable.add_course(csc347)
         self.AutoTable.add_course(csc369)
         self.AutoTable.add_course(mat301)
-
-        self.AutoTable.add_course(csc338)
-        self.AutoTable.add_course(csc343)
-        self.AutoTable.add_course(csc363)
-        self.AutoTable.add_course(csc384)
         
 
 
