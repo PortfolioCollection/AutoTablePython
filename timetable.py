@@ -1,6 +1,9 @@
 from Builder import*
 from Graph import*
 
+
+checks = 0
+
 class AutoTable:
     def __init__(self):
         self.courses = []
@@ -25,55 +28,41 @@ class AutoTable:
         restricted.append(initial_cast)
         for timeslot in initial_cast.verticies:
             visited.append(timeslot)
-            path = self.recursive_path(timeslot,visited[:],restricted[:],1)
-            #for vertex in path[0]:
-            #    print(vertex)
-            #print("-------")
+            path = self.recursive_path(timeslot,visited[:],restricted[:],1,0)
             if optimal[1] > path[1]:
                 optimal = path
             visited = []
-
         return optimal
     
-    def recursive_path(self,timeslot,visited,restricted,depth):
-        
+    def recursive_path(self,timeslot,visited,restricted,depth,distance):
         global graph
-        #print(len(restricted))
-        #for cast in restricted:
-            #print(cast.name)
         if len(visited) >= len(graph.casts):
-            #print("Path at Depth: "+str(depth))
-            #print("Restricted")
-            #for cast in restricted:
-            #    print(cast.name)
-            #print(len(visited))
-            #print("-------------")
-            #print("Visited")
-            #for vertex in visited:
-            #    print(vertex)
-            #print("-------------------------")
-            return (visited,len(visited))
+            global checks
+            checks += 1
+            return (visited,distance)
+        
         else:
             optimal = ([],10000)
             for cast in graph.casts:
                 if cast not in restricted:
                     restricted.append(cast)
                     for timeslot in cast.verticies:
+                        additional = self.get_closest_distance(visited,timeslot)
                         visited.append(timeslot)
-                        #print(str(len(restricted)-len(visited)))
-                        path = self.recursive_path(timeslot,visited[:],restricted[:],depth+1)
-                        #print((optimal,path))
+                        #print(additional)
+                        path = self.recursive_path(timeslot,visited[:],restricted[:],depth+1,distance+additional)
                         if optimal[1] > path[1]:
                             optimal = path
                         visited.remove(timeslot)
-                    #restricted.remove(cast)
-            #print("Path at Depth: "+str(depth))
-            #for vertex in visited:
-            #    print(vertex)
-            #print("-------------------------")
             return optimal
-            
-            
+
+
+    def get_closest_distance(self,visited,timeslot):
+        distance = 1000
+        for vertex in visited:
+            distance = min(distance,abs(int(timeslot.end)-int(vertex.start)))
+            distance = min(distance,abs(int(timeslot.start)-int(vertex.end))) 
+        return distance
 
 if __name__ == "__main__":
     autotable = AutoTable()
@@ -81,7 +70,6 @@ if __name__ == "__main__":
     autotable = builder.build_table()
     graph = Graph()
     for course in autotable.courses:
-        
         graph.add_course(course)
     #print(autotable)
     """
@@ -96,8 +84,11 @@ if __name__ == "__main__":
                 print(edge)
         print("----------------")
     """
-    print(graph)
+    graph.connect_graph()
+    #print(graph)
     path = autotable.best_path(graph)
-    print(path)
+    print("Optimal distance: "+str(path[1]))
     for vertex in path[0]:
         print(vertex)
+    
+    print(checks)

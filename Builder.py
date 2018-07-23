@@ -46,12 +46,12 @@ class Builder:
 
         mat301 = Course("mat301")
         lec101 = Lecture("0101","Wed",11,13)
-        lec102 = Lecture("0101","Fri",9,10)
+        #lec102 = Lecture("0101","Fri",9,10)
         tut101 = Tutorial("0101","Wed",9,10)
-        tut102 = Tutorial("0102","Wed",15,11)
+        tut102 = Tutorial("0102","Wed",10,11)
         tut103 = Tutorial("0103","Wed",13,14)
         mat301.add_section(lec101)
-        mat301.add_section(lec102)
+        #mat301.add_section(lec102)
         mat301.add_section(tut101)
         mat301.add_section(tut102)
         mat301.add_section(tut103)
@@ -60,6 +60,13 @@ class Builder:
         self.AutoTable.add_course(csc347)
         self.AutoTable.add_course(csc369)
         self.AutoTable.add_course(mat301)
+
+
+        
+        #self.AutoTable.add_course(mat301)
+        #self.AutoTable.add_course(csc369)
+        #self.AutoTable.add_course(csc347)
+        #self.AutoTable.add_course(csc324)
         
 
 

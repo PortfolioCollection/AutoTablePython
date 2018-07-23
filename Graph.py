@@ -43,6 +43,12 @@ class Cast:
         v2.edges.append(edge)
         self.edges.append(edge)
 
+    def __str__(self):
+        string = self.name+":\n"
+        for vertex in self.verticies:
+            string += str(vertex) + "\n"
+        return string
+
 class Graph:
     def __init__(self):
         self.casts = []
@@ -51,6 +57,7 @@ class Graph:
     def add_course(self,course):
         course_vertex = []
         tup = course.compress_times()
+        print(tup)
         i = 0
         name = course.name+" lectures"
         cast = Cast(name)
@@ -96,17 +103,38 @@ class Graph:
                 self.connect_casts(self.casts[i],self.casts[j])
 
     def connect_casts(self,cast1,cast2):
+        #print("Here")
+        #print(cast2)
         for i in range(len(cast1.verticies)):
-            for j in range(i+1,len(cast2.verticies)):
-                self.add_edge(cast1.verticies[i], cast2.verticies[j])
-        
+            for j in range(i,len(cast2.verticies)):
+                #if cast1.verticies[i].name + " " + cast1.verticies[i].code == "csc347 pra0101":
+                #    if cast2.verticies[j].name + " " + cast2.verticies[j].code == "mat301 lec0101":
+                        #print(cast1.verticies[i].name + " " + cast1.verticies[i].code)
+                        #print(cast2.verticies[j].name + " " + cast2.verticies[j].code)
+                        #print((cast1.verticies[i].start,cast2.verticies[j].end))
+                        #print((cast2.verticies[j].start,cast1.verticies[i].end))
+                        #print(self.has_overlap(cast1.verticies[i].start,cast1.verticies[i].end,
+                        #                   cast2.verticies[j].start,cast2.verticies[j].end))
+                overlap = self.has_overlap(cast1.verticies[i].start,cast1.verticies[i].end,
+                                           cast2.verticies[j].start,cast2.verticies[j].end)
+                if overlap == False:
+                    self.add_edge(cast1,cast2,
+                                  cast1.verticies[i], cast2.verticies[j])
+                else:
+                    print(cast1.verticies[i].name + " " + cast1.verticies[i].code)
+                    print(cast2.verticies[j].name + " " + cast2.verticies[j].code)
+
+
+    def has_overlap(self,x1,x2,y1,y2):
+        return x1 < y2 and y1 < x2
         
 
-    def add_edge(self,v1,v2):
+    def add_edge(self,cast1,cast2,v1,v2):
         edge = Edge(v1,v2)
         v1.edges.append(edge)
         v2.edges.append(edge)
-        self.edges.append(edge)
+        cast1.add_edge(v1,v2)
+        cast2.add_edge(v1,v2)
             
 
 
@@ -115,9 +143,9 @@ class Graph:
         i=0
         permutations = 1
         for cast in self.casts:
+            print(cast)
             for vertex in cast.verticies:
                 i+=1
                 permutations *= vertex.combinations
-                string += str(i)+": "+str(vertex) + "\n"
         print("Permutations: "+str(permutations))
         return string
