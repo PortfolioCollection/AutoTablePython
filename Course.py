@@ -74,6 +74,8 @@ class Section(object):
         self.day = day
         self.start = start + 24*i
         self.end = end + 24*i
+        #print(day)
+        #print((self.start,self.end))
 
     def __str__(self):
         string = self.day+" start: "+str(self.start)+" end: "+str(self.end)
@@ -103,4 +105,3 @@ class Practical(Section):
     def __str__(self):
         string = "Pra: "
         return string+ super(Practical,self).__str__()+"\n"
-        
