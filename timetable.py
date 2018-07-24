@@ -29,6 +29,7 @@ class AutoTable:
         for timeslot in initial_cast.verticies:
             visited.append(timeslot)
             path = self.recursive_path(timeslot,visited[:],restricted[:],1,0)
+            print("done")
             if optimal[1] > path[1]:
                 optimal = path
             visited = []
@@ -36,6 +37,10 @@ class AutoTable:
     
     def recursive_path(self,timeslot,visited,restricted,depth,distance):
         global graph
+        #print(depth)
+        #print(len(restricted))
+        if depth == 15:
+            print(depth)
         if len(visited) >= len(graph.casts):
             global checks
             checks += 1
@@ -48,21 +53,29 @@ class AutoTable:
                     restricted.append(cast)
                     for timeslot in cast.verticies:
                         additional = self.get_closest_distance(visited,timeslot)
-                        visited.append(timeslot)
-                        #print(additional)
-                        path = self.recursive_path(timeslot,visited[:],restricted[:],depth+1,distance+additional)
-                        if optimal[1] > path[1]:
-                            optimal = path
-                        visited.remove(timeslot)
+                        if additional < 100000:
+                            visited.append(timeslot)
+                            #print(additional)
+                            path = self.recursive_path(timeslot,visited[:],restricted[:],depth+1,distance+additional)
+                            if optimal[1] > path[1]:
+                                optimal = path
+                            visited.remove(timeslot)
             return optimal
 
 
     def get_closest_distance(self,visited,timeslot):
-        distance = 1000
+        distance = 100000
         for vertex in visited:
-            distance = min(distance,abs(int(timeslot.end)-int(vertex.start)))
-            distance = min(distance,abs(int(timeslot.start)-int(vertex.end))) 
+            overlap = self.has_overlap(vertex.start,vertex.end,timeslot.start,timeslot.end)
+            if overlap == False:
+                distance = min(distance,abs(int(timeslot.end)-int(vertex.start)))
+                distance = min(distance,abs(int(timeslot.start)-int(vertex.end)))
+            else:
+                return 100000
         return distance
+
+    def has_overlap(self,x1,x2,y1,y2):
+        return x1 <= y2 and y1 <= x2
 
 if __name__ == "__main__":
     autotable = AutoTable()

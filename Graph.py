@@ -106,7 +106,7 @@ class Graph:
         #print("Here")
         #print(cast2)
         for i in range(len(cast1.verticies)):
-            for j in range(i,len(cast2.verticies)):
+            for j in range(len(cast2.verticies)):
                 #if cast1.verticies[i].name + " " + cast1.verticies[i].code == "csc347 pra0101":
                 #    if cast2.verticies[j].name + " " + cast2.verticies[j].code == "mat301 lec0101":
                         #print(cast1.verticies[i].name + " " + cast1.verticies[i].code)
