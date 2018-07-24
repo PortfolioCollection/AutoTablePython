@@ -8,7 +8,7 @@ class Vertex:
         self.combinations = 1
 
     def __str__(self):
-        return "Vertex: "+self.name+" "+self.code+" "+self.start+" "+self.end
+        return "Vertex: "+self.name+" "+self.code+" "+str(self.start)+" "+str(self.end)
 
 class Edge:
     def __init__(self, v1,v2):
@@ -63,7 +63,7 @@ class Graph:
         cast = Cast(name)
         for lecture in tup[0]:
             time = lecture.split()
-            vertex = Vertex(course.name,"lec"+tup[0][lecture][0],time[0],time[1])
+            vertex = Vertex(course.name,"lec"+tup[0][lecture][0],int(time[0]),int(time[1]))
             cast.verticies.append(vertex)
             i+= 1
         if i > 0:
@@ -74,7 +74,7 @@ class Graph:
         cast = Cast(name)
         for tutorial in tup[1]:
             time = tutorial.split()
-            vertex = Vertex(course.name,"tut"+tup[1][tutorial][0],time[0],time[1])
+            vertex = Vertex(course.name,"tut"+tup[1][tutorial][0],int(time[0]),int(time[1]))
             cast.verticies.append(vertex)
             i+= 1
         
@@ -86,7 +86,7 @@ class Graph:
         cast = Cast(name)
         for practical in tup[2]:
             time = practical.split()
-            vertex = Vertex(course.name,"pra"+tup[2][practical][0],time[0],time[1])
+            vertex = Vertex(course.name,"pra"+tup[2][practical][0],int(time[0]),int(time[1]))
             cast.verticies.append(vertex)
             i+= 1
         if i > 0:
