@@ -1,13 +1,16 @@
-days = ["Mon","Tue","Wed","Thu","Fri"]
+day_list = ["Mon","Tue","Wed","Thu","Fri"]
 
 class Course:
-    def __init__(self,name):
+    def __init__(self,name,session):
         self.name = name
+        self.session = session
         self.lectures = []
         self.tutorials = []
         self.practicals = []
 
     def add_section(self,section):
+        section.name = self.name
+        section.session = self.session
         if type(section) is Lecture:
             self.lectures.append(section)
         elif type(section) is Tutorial:
@@ -16,35 +19,49 @@ class Course:
             self.practicals.append(section)
 
     def compress_times(self):
-        dictionary1 = {}
-        for section in self.lectures:
-            term = str(section.start)+" "+str(section.end) 
-            if term in dictionary1:
-                new = dictionary1[term]
-                new.append(section.code)
-                dictionary1[term] = new
-            else:
-                dictionary1[term] = [section.code]
-        dictionary2 = {}
-        for section in self.tutorials:
-            term = str(section.start)+" "+str(section.end) 
-            if term in dictionary2:
-                new = dictionary2[term]
-                new.append(section.code)
-                dictionary2[term] = new
-            else:
-                dictionary2[term] = [section.code]
-        dictionary3 = {}
-        for section in self.practicals:
-            term = str(section.start)+" "+str(section.end) 
-            if term in dictionary3:
-                new = dictionary3[term]
-                new.append(section.code)
-                dictionary3[term] = new
-            else:
-                dictionary3[term] = [section.code]
+        for i in range(len(self.lectures)):
+            for j in range(i):
+                if self.lectures[i].times == self.lectures[j].times:
+                    self.lectures[j].simmilar_times.append(self.lectures[i])
+                    self.lectures[i].simmilar_times = -1
+                    bre
+        i = 0
+        while i < len(self.lectures):
+            if self.lectures[i].simmilar_times == -1:
+                self.lectures.remove(self.lectures[i])
+                i -= 1
+            i+=1
 
-        return (dictionary1,dictionary2,dictionary3)
+        for i in range(len(self.tutorials)):
+            for j in range(i):
+                if self.tutorials[i].times == self.tutorials[j].times:
+                    self.tutorials[j].simmilar_times.append(self.tutorials[i])
+                    self.tutorials[i].simmilar_times = -1
+                    break
+        i = 0
+        while i < len(self.tutorials):
+            if self.tutorials[i].simmilar_times == -1:
+                self.tutorials.remove(self.tutorials[i])
+                i -= 1
+            i+=1
+
+        for i in range(len(self.practicals)):
+            for j in range(i):
+                if self.practicals[i].times == self.practicals[j].times:
+                    self.practicals[j].simmilar_times.append(self.practicals[i])
+                    self.practicals[i].simmilar_times = -1
+                    break
+        i = 0
+        while i < len(self.practicals):
+            if self.practicals[i].simmilar_times == -1:
+                self.practicals.remove(self.practicals[i])
+                i -= 1
+            i+=1
+        casts = []
+        casts.append(self.lectures)
+        casts.append(self.tutorials)
+        casts.append(self.practicals)
+        return casts
 
 
     def __str__(self):
@@ -62,46 +79,53 @@ class Course:
         
         
 class Section(object):
-    def __init__(self,code,day,start,end):
-        global days
-        i = 0
-        for index in days:
-            if index != day:
-                i+= 1
-            else:
-                break
+    def __init__(self,code,days,times):
+        global day_list
+        for i in range(len(days)):
+            for j in range(len(day_list)):
+                if day_list[j] == days[i]:
+                    break
+            times[i] = (times[i][0] + 24*j,times[i][1] + 24*j)
+        self.type = None
+        self.name = None
+        self.session = None
         self.code = code
-        self.day = day
-        self.start = start + 24*i
-        self.end = end + 24*i
-        #print(day)
-        #print((self.start,self.end))
+        self.days = days
+        self.times = times
+        self.simmilar_times = []
 
     def __str__(self):
-        string = self.day+" start: "+str(self.start)+" end: "+str(self.end)
-        return string
+        string = ""
+        for i in range(len(self.times)):
+            string+="\t"
+            string += self.days[i]+" start: "+str(self.times[i][0])+" end: "+str(self.times[i][1])+"\n"
+        #print(self.simmilar_times)
+        return string[:-1] 
 
 class Lecture(Section):
-    def __init__(self,code,day,start,end):
-        Section.__init__(self,code,day,start,end)
+    def __init__(self,code,days,times):
+        Section.__init__(self,code,days,times)
+        self.type = "Lec"
 
     def __str__(self):
         string = "Lec: "
-        return string+ super(Lecture,self).__str__()+"\n"
+        return string+ super(Lecture,self).__str__()
         
 
 class Tutorial(Section):
-    def __init__(self,code,day,start,end):
-        Section.__init__(self,code,day,start,end)
+    def __init__(self,code,days,times):
+        Section.__init__(self,code,days,times)
+        self.type = "Tut"
 
     def __str__(self):
         string = "Tut: "
-        return string+ super(Tutorial,self).__str__()+"\n"
+        return string+ super(Tutorial,self).__str__()
 
 class Practical(Section):
-    def __init__(self,code,day,start,end):
-        Section.__init__(self,code,day,start,end)
+    def __init__(self,code,days,times):
+        Section.__init__(self,code,days,times)
+        self.type = "Pra"
 
     def __str__(self):
         string = "Pra: "
-        return string+ super(Practical,self).__str__()+"\n"
+        return string+ super(Practical,self).__str__()
