@@ -21,7 +21,7 @@ class Builder:
         csc324.add_section(pra104)
         csc324.add_section(pra105)
         
-        csc347 = Course("csc347","H")
+        csc347 = Course("csc347","Y")
         lec101 = Lecture("0101",["Fri"],      [(15,17)])
         pra101 = Practical("0101",["Wed"],    [(11,12)])
         pra102 = Practical("0102",["Wed"],    [(15,16)])
@@ -29,7 +29,7 @@ class Builder:
         csc347.add_section(pra101)
         csc347.add_section(pra102)
 
-        csc369 = Course("csc369","H")
+        csc369 = Course("csc369","Y")
         lec101 = Lecture("0101",["Mon"],      [(9,11)])
         lec102 = Lecture("0102",["Mon"],      [(13,15)])
         pra101 = Practical("0101",["Thu"],    [(9,10)])
@@ -43,7 +43,7 @@ class Builder:
         csc369.add_section(pra103)
         csc369.add_section(pra104)
 
-        mat301 = Course("mat301","H")
+        mat301 = Course("mat301","Y")
         lec101 = Lecture("0101",["Wed","Fri"],  [(11,13),(9,10)])
         tut101 = Tutorial("0101",["Wed"],       [(9,10)])
         tut102 = Tutorial("0102",["Wed"],       [(10,11)])
@@ -53,7 +53,7 @@ class Builder:
         mat301.add_section(tut102)
         mat301.add_section(tut103)
 
-        csc338 = Course("csc338","H")
+        csc338 = Course("csc338","Y")
         lec101 = Lecture("0101",["Wed"],      [(15,17)])
         tut101 = Tutorial("0101",["Fri"],     [(13,14)])
         tut102 = Tutorial("0102",["Fri"],     [(14,15)])
@@ -61,7 +61,7 @@ class Builder:
         csc338.add_section(tut101)
         csc338.add_section(tut102)
 
-        csc343 = Course("csc343","H")
+        csc343 = Course("csc343","Y")
         lec101 = Lecture("0101",["Mon"],      [(9,11)])
         pra101 = Practical("0101",["Thu"],    [(13,14)])
         pra102 = Practical("0102",["Wed"],    [(14,15)])
@@ -69,7 +69,7 @@ class Builder:
         csc343.add_section(pra101)
         csc343.add_section(pra102)
 
-        csc363 = Course("csc363","H")
+        csc363 = Course("csc363","Y")
         lec101 = Lecture("0101",["Mon"],      [(11,13)])
         lec102 = Lecture("0102",["Thu"],      [(18,20)])
         tut101 = Tutorial("0101",["Wed"],     [(13,14)])
@@ -83,7 +83,7 @@ class Builder:
         csc363.add_section(tut103)
         csc363.add_section(tut104)
 
-        csc384 = Course("csc384","H")
+        csc384 = Course("csc384","Y")
         lec101 = Lecture("0101",["Thu"],      [(11,13)])
         tut101 = Tutorial("0101",["Tue"],     [(16,17)])
         tut102 = Tutorial("0102",["Tue"],     [(17,18)])
@@ -94,15 +94,18 @@ class Builder:
         csc384.add_section(tut103)
 
 
+        self.AutoTable.year = Session("Year")
         self.AutoTable.fall = Session("Fall")
         self.AutoTable.winter = Session("Winter")
-        
-        self.AutoTable.fall.add_course(csc324)
+
+
+        self.AutoTable.year.add_course(csc324)
+
         self.AutoTable.fall.add_course(csc347)
         self.AutoTable.fall.add_course(csc369)
         self.AutoTable.fall.add_course(mat301)
 
-        self.AutoTable.winter.add_course(csc324)
+        
         self.AutoTable.winter.add_course(csc338)
         self.AutoTable.winter.add_course(csc343)
         self.AutoTable.winter.add_course(csc363)

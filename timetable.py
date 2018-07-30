@@ -6,6 +6,7 @@ class AutoTable:
     def __init__(self):
         self.fall = None
         self.winter = None
+        self.year = None
         print("Initializing Table")
 
     def add_course(self,course):
@@ -139,12 +140,12 @@ class AutoTable:
         for course in session:
             graph.add_course(course)
         path,all_paths = self.best_path(graph)
-        print("Optimal distance: "+str(path[1]))
+        #print("Optimal distance: "+str(path[1]))
         courses = self.organize_by_course(path[0])
-        for course in courses:
-            print(course+":")
-            for section in courses[course]:
-                print(section)
+        #for course in courses:
+            #print(course+":")
+            #for section in courses[course]:
+            #    print(section)
         print("Num Possible Solutions: "+str(checks))
         print("Permutations: "+str(graph.num_combinations()))
         print("--------------")
@@ -162,40 +163,68 @@ class AutoTable:
                 courses[name] = [vertex]
         return courses
 
-    def construct_year(self,fall,winter):
+    def construct_year(self,fall,winter,listed):
         compatible = {}
         print("--------------")
-        ordered1 = self.by_year_courses(fall)
+        ordered1 = self.by_year_courses(fall,listed)
         print("--------------")
-        ordered2 = self.by_year_courses(winter)
-        
+        ordered2 = self.by_year_courses(winter,listed)
+        optimal_solution = [None,None]
+        optimal1 = 100000
+        optimal2 = 100000
+        print("---------------")
         for key in ordered1:
             if key in ordered2:
+                #print(key)
                 compatible[key] = []
                 for solution in ordered1[key]:
                     compatible[key].append(solution)
+                    if solution[1] < optimal1:
+                        optimal1 = solution[1]
+                        optimal_solution[0] = solution
                 for solution in ordered2[key]:
                     compatible[key].append(solution)
-        return compatible
-        
+                    if solution[1] < optimal2:
+                        optimal2 = solution[1]
+                        optimal_solution[1] = solution
+        optimal_solution.append((optimal1,optimal2))
+        return (optimal_solution,compatible)
 
-    def by_year_courses(self,session):
+
+    def index_year_courses(self,year_courses):
+        listed = []
+        for course in year_courses:
+            for lecture in course.lectures:
+                listed.append(str(lecture))
+            for tutorial in course.tutorials:
+                listed.append(str(tutorial))
+            for practical in course.practicals:
+                listed.append(str(practical))
+
+        return listed
+
+    def by_year_courses(self,session,listed):
         all_possible = {}
         for solution in session:
+            key = ""
             courses = self.organize_by_course(solution[0])
             for course in courses:
                 if course[-1] == "Y":
-                    key = course
                     for section in courses[course]:
-                        key += " "+section.type+section.code
-                    if key in all_possible:
-                        all_possible[key].append(solution)
-                    else:
-                        all_possible[key] = [solution]
-        for key in all_possible:
-            print(key)
-        return all_possible
+                        for i in range(len(listed)):
+                            if str(section) == listed[i]:
+                                key += str(i) + " " 
                     
+            if key in all_possible:
+                #print(all_possible[key][0])
+                if all_possible[key][0][1] > solution[1]:
+                    all_possible[key][0] = solution
+            else:
+                all_possible[key] = [solution]
+        #for key in all_possible:
+        #    print(key)
+            #print(all_possible[key][0][1])
+        return all_possible
         
 
 if __name__ == "__main__":
@@ -204,21 +233,25 @@ if __name__ == "__main__":
     autotable = builder.build_table()
     print("\n")
     print("Fall:")
-    space1 = autotable.solution_space(autotable.fall.courses)
+    courses = autotable.fall.courses
+    courses.extend(autotable.year.courses)
+    space1 = autotable.solution_space(courses)
     print("\n")
     print("Winter:")
-    space2 = autotable.solution_space(autotable.winter.courses)
-    compatible = autotable.construct_year(space1,space2)
-    optimal = 100000
-    optimal_solution = []
-    for key in compatible:
-        for solution in compatible[key]:
-            if solution[1] < optimal:
-                optimal_solution = solution
-
-    for section in optimal_solution[0]:
+    courses = autotable.winter.courses
+    courses.extend(autotable.year.courses)
+    space2 = autotable.solution_space(courses)
+    listed = autotable.index_year_courses(autotable.year.courses)
+    compatible = autotable.construct_year(space1,space2,listed)
+    print("Fall:")
+    for section in compatible[0][0][0]:
         print(section.name)
         print(section)
+    print("Winter:")
+    for section in compatible[0][1][0]:
+        print(section.name)
+        print(section)
+    print("Distance: "+str(compatible[0][2]))
 
     
     

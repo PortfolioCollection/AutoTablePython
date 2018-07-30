@@ -108,8 +108,7 @@ class Lecture(Section):
         self.type = "Lec"
 
     def __str__(self):
-        string = "Lec: "
-        return string+ super(Lecture,self).__str__()
+        return self.type+self.code+":"+super(Lecture,self).__str__()
         
 
 class Tutorial(Section):
@@ -118,8 +117,7 @@ class Tutorial(Section):
         self.type = "Tut"
 
     def __str__(self):
-        string = "Tut: "
-        return string+ super(Tutorial,self).__str__()
+        return self.type+self.code+":"+super(Tutorial,self).__str__()
 
 class Practical(Section):
     def __init__(self,code,days,times):
@@ -127,5 +125,4 @@ class Practical(Section):
         self.type = "Pra"
 
     def __str__(self):
-        string = "Pra: "
-        return string+ super(Practical,self).__str__()
+        return self.type+self.code+":"+super(Practical,self).__str__()
