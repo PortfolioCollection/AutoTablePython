@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup as bs
 from requests import get
+from Course import*
+from Session import*
 
-times = {}
-
-def course_time(course, session):
+def scrape_course(course, session):
     if 'fall' in session.lower():
         if course[5] == 'y':
             session = 'Y20189' #changes depending on year
@@ -12,7 +12,7 @@ def course_time(course, session):
     elif 'winter' in session.lower():
         session = 'S20191'
     elif 'summer' in session.lower():
-        'heh'
+        session = 'Y20185'
     else:
         print('Not a valid session')
         return
@@ -25,18 +25,21 @@ def course_time(course, session):
         return
     soup = bs(response.text, 'html.parser')
 
-    times[course.upper()+session[0]] = [[],[],[]]
+    course = Course(course[:6], session[0]) #
     time_td = soup.find_all('td')
     for i in range(0, len(time_td), 8):
-        if 'Lec' in time_td[i].text.strip(): #0 = lec
-            times[course.upper()+session[0]][0].append(time_td[i].text.strip() + ' ' + time_td[i+1].text.strip())
-        if 'Tut' in time_td[i].text.strip(): #1 = tut
-            times[course.upper()+session[0]][1].append(time_td[i].text.strip() + ' ' + time_td[i+1].text.strip())
-        if 'Pra' in time_td[i].text.strip(): #2 = pra
-            times[course.upper()+session[0]][2].append(time_td[i].text.strip() + ' ' + time_td[i+1].text.strip())
-        print(time_td[i].text.strip(), time_td[i+1].text.strip())
-
-
-def course_desc(course):
-    'yap'
-    
+        section = time_td[i].text.split() #0 = type, 1 = number
+        times = time_td[i+1].text.split() #comes in 2s! i = day, i+1 = time
+        days = [] #just so i can append
+        hours = []
+        for j in range(0, len(times), 2):
+            days.append(times[j][0] + times[j][1:3].lower())
+            hours.append((int(times[j+1][:2]),int(times[j+1][6:8])))
+        if 'Lec' in section[0]: #its bound to be one of these ifs
+            sec = Lecture(section[1], days, hours)
+        if 'Tut' in section[0]:
+            sec = Tutorial(section[1], days, hours)
+        if 'Pra' in section[0]:
+            sec = Pratical(section[1], days, hours)
+        course.add_section(sec)
+    return course
