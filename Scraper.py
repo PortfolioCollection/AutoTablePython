@@ -5,7 +5,7 @@ from Session import*
 
 def scrape_course(course, session):
     if 'fall' in session.lower():
-        if course[5] == 'y':
+        if course[5].lower() == 'y':
             session = 'Y20189' #changes depending on year
         else:
             session = 'F20189'
