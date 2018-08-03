@@ -1,4 +1,4 @@
-day_list = ["Mon","Tue","Wed","Thu","Fri"]
+day_list = ["MON","TUE","WED","THU","FRI"]
 
 class Course:
     def __init__(self,name,session):
@@ -24,7 +24,7 @@ class Course:
                 if self.lectures[i].times == self.lectures[j].times:
                     self.lectures[j].simmilar_times.append(self.lectures[i])
                     self.lectures[i].simmilar_times = -1
-                    bre
+                    break
         i = 0
         while i < len(self.lectures):
             if self.lectures[i].simmilar_times == -1:
@@ -67,14 +67,14 @@ class Course:
     def __str__(self):
         string = "--------------\n"
         for lec in self.lectures:
-            string += str(lec)
-        string += "--------------\n"
+            string += str(lec)+"\n"
+        string += "\n--------------\n"
         for tut in self.tutorials:
-            string += str(tut)
+            string += str(tut)+"\n"
         string += "--------------\n"
         for pra in self.practicals:
-            string += str(pra)
-        string += "--------------\n"
+            string += str(pra)+"\n"
+        string += "\n--------------\n"
         return string
         
         
@@ -97,8 +97,8 @@ class Section(object):
     def __str__(self):
         string = ""
         for i in range(len(self.times)):
-            string+="\t"
             string += self.days[i]+" start: "+str(self.times[i][0])+" end: "+str(self.times[i][1])+"\n"
+            string+="\t"
         #print(self.simmilar_times)
         return string[:-1] 
 
@@ -108,7 +108,7 @@ class Lecture(Section):
         self.type = "Lec"
 
     def __str__(self):
-        return self.type+self.code+":"+super(Lecture,self).__str__()
+        return self.type+self.code+":"+super(Lecture,self).__str__().strip()
         
 
 class Tutorial(Section):
@@ -117,7 +117,7 @@ class Tutorial(Section):
         self.type = "Tut"
 
     def __str__(self):
-        return self.type+self.code+":"+super(Tutorial,self).__str__()
+        return self.type+self.code+":"+super(Tutorial,self).__str__().strip()
 
 class Practical(Section):
     def __init__(self,code,days,times):
@@ -125,4 +125,4 @@ class Practical(Section):
         self.type = "Pra"
 
     def __str__(self):
-        return self.type+self.code+":"+super(Practical,self).__str__()
+        return self.type+self.code+":"+super(Practical,self).__str__().strip()

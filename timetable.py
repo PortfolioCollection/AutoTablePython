@@ -1,6 +1,7 @@
 from Builder import*
 from Graph import*
-
+from coursefinder import*
+import time
 
 class AutoTable:
     def __init__(self):
@@ -14,8 +15,15 @@ class AutoTable:
 
     def __str__(self):
         string = ""
-        for course in self.courses:
+        string+="Fall\n"
+        for course in self.fall.courses:
             string += str(course) + "\n"
+        string+="Winter:\n"
+        for course in self.winter.courses:
+            string += str(course) + "\n"
+        string+="Year:\n"
+        for course in self.year.courses:
+            string += str(course) + "\n"    
         return string
 
     def best_path(self,input_graph):
@@ -140,12 +148,7 @@ class AutoTable:
         for course in session:
             graph.add_course(course)
         path,all_paths = self.best_path(graph)
-        #print("Optimal distance: "+str(path[1]))
         courses = self.organize_by_course(path[0])
-        #for course in courses:
-            #print(course+":")
-            #for section in courses[course]:
-            #    print(section)
         print("Num Possible Solutions: "+str(checks))
         print("Permutations: "+str(graph.num_combinations()))
         print("--------------")
@@ -225,12 +228,16 @@ class AutoTable:
         #    print(key)
             #print(all_possible[key][0][1])
         return all_possible
-        
 
-if __name__ == "__main__":
+def generate():
+    start_time = time.time()
     autotable = AutoTable()
-    builder = Builder(autotable)
-    autotable = builder.build_table()
+    #builder = Builder(autotable)
+    #autotable = builder.build_table()
+    scraper = Scraper(autotable)
+    autotable = scraper.build_table()
+    #print(autotable)
+    
     print("\n")
     print("Fall:")
     courses = autotable.fall.courses
@@ -252,6 +259,10 @@ if __name__ == "__main__":
         print(section.name)
         print(section)
     print("Distance: "+str(compatible[0][2]))
+    print("--- %s seconds ---" % (time.time() - start_time))    
+
+if __name__ == "__main__":
+    generate()
 
     
     
