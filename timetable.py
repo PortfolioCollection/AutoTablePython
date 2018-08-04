@@ -1,6 +1,6 @@
 from Builder import*
 from Graph import*
-from coursefinder import*
+from Scraper import*
 import time
 
 class AutoTable:
@@ -47,12 +47,10 @@ class AutoTable:
             if optimal[1] > path[1] and path[1] >= 0:
                 optimal = path
             visited = []
-        global solutions
         return (optimal,solutions)
     
     def recursive_path(self,timeslot,visited,restricted,depth,distance):
         global graph
-        
         if len(visited) == len(graph.casts):
             global checks
             global solutions
@@ -172,12 +170,13 @@ class AutoTable:
         ordered1 = self.by_year_courses(fall,listed)
         print("--------------")
         ordered2 = self.by_year_courses(winter,listed)
-        optimal_solution = [None,None]
-        optimal1 = 100000
-        optimal2 = 100000
+        lst = []
         print("---------------")
         for key in ordered1:
             if key in ordered2:
+                optimal_solution = [None,None]
+                optimal1 = 100000
+                optimal2 = 100000
                 #print(key)
                 compatible[key] = []
                 for solution in ordered1[key]:
@@ -190,7 +189,20 @@ class AutoTable:
                     if solution[1] < optimal2:
                         optimal2 = solution[1]
                         optimal_solution[1] = solution
+                lst.append((optimal_solution,optimal1,optimal2))
+        optimal = 100000
+        optimal1 = 100000
+        optimal2 = 100000
+        optimal_solution = []
+        for item in lst:
+            distance = item[1]+item[2]
+            if distance<optimal:
+                optimal = distance
+                optimal_solution = item[0]
+                optimal1 = item[1]
+                optimal2 = item[2]
         optimal_solution.append((optimal1,optimal2))
+        #print(optimal_solution)
         return (optimal_solution,compatible)
 
 
