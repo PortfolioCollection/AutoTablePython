@@ -57,8 +57,6 @@ class Builder:
         mat301.add_section(tut102)
         mat301.add_section(tut103)
 
-        print(mat301)
-
         csc338 = Course("csc338","H")
         lec101 = Lecture("0101",["WED"],      [(15,17)])
         tut101 = Tutorial("0101",["FRI"],     [(13,14)])

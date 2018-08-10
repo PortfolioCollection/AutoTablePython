@@ -2,7 +2,6 @@ class Cast:
     def __init__(self,name):
         self.name = name
         self.verticies = []
-        self.edges = []
         self.combinations = 1
 
     def add_vertex(self,vertex):
@@ -17,7 +16,6 @@ class Cast:
 class Graph:
     def __init__(self):
         self.casts = []
-        self.edges = []
 
     def add_course(self,course):
         course_vertex = []
@@ -67,6 +65,9 @@ class Graph:
 
 
     def has_overlap(self,x1,x2,y1,y2):
+        """
+        Returns whether interval     
+        """
         return x1 < y2 and y1 < x2
 
     def num_combinations(self):
