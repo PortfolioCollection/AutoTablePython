@@ -50,6 +50,7 @@ class Graph:
         if i > 0:
             cast.combinations *= i
             self.casts.append(cast)
+            #self.casts.sort(key=lambda x: x.combinations)
 
     def connect_casts(self,cast1,cast2):
         for i in range(len(cast1.verticies)):

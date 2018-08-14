@@ -4,6 +4,8 @@ from Scraper import*
 import time
 import math
 
+global count
+count = 0
 
 class AutoTable:
     def __init__(self):
@@ -85,17 +87,20 @@ def check_section_overlap(section1,section2):
     return False
 
 def combine_casts(cast1,cast2):
+    global count
     solutions = []
     for vertex1 in cast1.verticies:
         for vertex2 in cast2.verticies:
             if check_section_overlap(vertex1,vertex2) == False:
                 solution = [vertex1,vertex2]
                 distance = update_distance([vertex1],vertex2,0)
-                
                 solutions.append([solution,distance])
+                count+=1
     return solutions
 
-def combine_solutions(cast1,solutions):
+def merge_cast(cast1,solutions):
+    start_time = time.time()
+    global count
     conflict = False
     new_solutions = []
     for vertex1 in cast1.verticies:
@@ -105,27 +110,30 @@ def combine_solutions(cast1,solutions):
                     conflict = True
                     break
             if conflict == False:
+                count+=1
                 combination = solution[0][:]
                 distance = update_distance(combination,vertex1,solution[1])
-                
                 combination.append(vertex1)
                 new_solutions.append([combination,distance])
             else:
                 conflict = False
+    print(len(new_solutions))
+    print("--- Merge Cast %s seconds ---" % (time.time() - start_time)) 
     return new_solutions
+
 
 
 def generate_semester(courses):
     graph = Graph()
     for course in courses:
         graph.add_course(course)
-
+    graph.casts.sort(key=lambda x: x.combinations)
     cast1 = graph.casts[0]
     cast2 = graph.casts[1]
     solutions = combine_casts(cast1,cast2)
     
     for i in range(2,len(graph.casts)):
-        solutions = combine_solutions(graph.casts[i],solutions)
+        solutions = merge_cast(graph.casts[i],solutions)
     return solutions
 
 def construct_year(fall,winter,listed,dictionary):
@@ -267,17 +275,21 @@ def generate():
     start_time = time.time()
     "Fall courses"
     start_time_half = time.time()
-    courses = autotable.fall.courses
-    courses.extend(autotable.year.courses)
+    courses = autotable.year.courses[:]
+    courses.extend(autotable.fall.courses)
     fall_space = generate_semester(courses)
     print(len(fall_space))
+    global count
+    print(count)
+    count = 0
     print("--- Fall half year %s seconds ---" % (time.time() - start_time_half))  
     "Winter courses"
     start_time_half = time.time()
-    courses = autotable.winter.courses
-    courses.extend(autotable.year.courses)
+    courses = autotable.year.courses[:]
+    courses.extend(autotable.winter.courses)
     winter_space = generate_semester(courses)
     print(len(winter_space))
+    print(count)
     print("--- Winter half year %s seconds ---" % (time.time() - start_time_half)) 
     "Year courses"
     start_time_year = time.time()

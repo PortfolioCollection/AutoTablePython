@@ -61,16 +61,21 @@ class Scraper:
 
     def build_table(self):
         
+        self.scrape_course("ANT200Y1","Fall")
+        self.scrape_course("CHM151Y1","Fall")
         self.scrape_course("SPA100Y1","Fall")
-        self.scrape_course("VIC172Y1","Fall")
-        self.scrape_course("VIC173Y1","Fall")
+        
         #self.scrape_course("VIC001Y1","Fall")
 
-        self.scrape_course("SOC100H1","Fall")
+        
         self.scrape_course("MAT135H1","Fall")
+        self.scrape_course("SOC100H1","Fall")
 
-        self.scrape_course("CHM136H1","Winter")
+        
         self.scrape_course("MAT136H1","Winter")
+        self.scrape_course("CHM136H1","Winter")
+
+
         """
         self.scrape_course("CSC324H5","Fall")
         self.scrape_course("CSC343H5","Fall")
