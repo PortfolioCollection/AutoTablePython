@@ -103,7 +103,7 @@ class Builder:
         self.AutoTable.fall.add_course(mat301)
 
         
-        self.AutoTable.winter.add_course(csc338)
+        #self.AutoTable.winter.add_course(csc338)
         self.AutoTable.winter.add_course(csc343)
         self.AutoTable.winter.add_course(csc363)
         self.AutoTable.winter.add_course(csc384)

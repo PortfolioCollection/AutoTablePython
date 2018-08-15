@@ -117,12 +117,10 @@ def merge_cast(cast1,solutions):
                 new_solutions.append([combination,distance])
             else:
                 conflict = False
-    print(len(new_solutions))
-    print("--- Merge Cast %s seconds ---" % (time.time() - start_time)) 
+    #print(len(new_solutions))
+    #print("--- Merge Cast %s seconds ---" % (time.time() - start_time)) 
     return new_solutions
-
-
-
+    
 def generate_semester(courses):
     graph = Graph()
     for course in courses:
@@ -135,6 +133,94 @@ def generate_semester(courses):
     for i in range(2,len(graph.casts)):
         solutions = merge_cast(graph.casts[i],solutions)
     return solutions
+
+def generate_year_courses(courses):
+    graph = Graph()
+    for course in courses:
+        graph.add_course(course)
+    graph.casts.sort(key=lambda x: x.combinations)
+    cast1 = graph.casts[0]
+    cast2 = graph.casts[1]
+    solutions = combine_casts(cast1,cast2)
+    
+    for i in range(2,len(graph.casts)):
+        solutions = merge_cast(graph.casts[i],solutions)
+    return solutions
+
+def fall_winter_merge(year_solutions, fall_courses, winter_courses):
+    if len(year_solutions) > 0:
+        fall = Graph()
+        for course in fall_courses:
+            fall.add_course(course)
+        fall.casts.sort(key=lambda x: x.combinations)
+
+
+        winter = Graph()
+        for course in winter_courses:
+            winter.add_course(course)
+        winter.casts.sort(key=lambda x: x.combinations)
+
+
+        year = []
+        for solution in year_solutions:
+            "Do Fall"
+            fall_version = [solution[:]]
+            for i in range(len(fall.casts)):
+                fall_version = merge_cast(fall.casts[i],fall_version)
+            "Do Winter"
+            winter_version = [solution[:]]
+            for i in range(len(winter.casts)):
+                winter_version = merge_cast(winter.casts[i],winter_version)
+
+            optimal1 = 100000
+            optimal_solution1 = []
+            for solution1 in fall_version:
+                if solution1[1] < optimal1:
+                    optimal1 = solution1[1]
+                    optimal_solution1 = solution1[0][:]
+
+            optimal2 = 100000
+            optimal_solution2 = []
+            for solution2 in winter_version:
+                if solution2[1] < optimal2:
+                    optimal2 = solution2[1]
+                    optimal_solution2 = solution2[0][:]
+            total_solution = optimal_solution1[:]
+            total_solution.extend(optimal_solution2[len(solution[0]):])
+            optimal = optimal1+optimal2
+            year.append((total_solution,optimal))
+
+        optimal = 100000
+        optimal_solution = []
+        for entry in year:
+            if entry[1] < optimal:
+                optimal = entry[1]
+                optimal_solution = entry[0][:]
+
+    else:
+        optimal1 = 100000
+        optimal2 = 100000
+        optimal_solution1 = []
+        optimal_solution2 = []
+        
+        if(len(fall_courses) > 0):
+            fall_space = generate_semester(fall_courses)
+            for solution1 in fall_space:
+                if solution1[1] < optimal1:
+                    optimal1 = solution1[1]
+                    optimal_solution1 = solution1[0][:]
+
+        if(len(winter_courses) > 0):
+            winter_space = generate_semester(winter_courses)
+            for solution2 in winter_space:
+                if solution2[1] < optimal2:
+                    optimal2 = solution2[1]
+                    optimal_solution2 = solution2[0][:]
+        optimal_solution = optimal_solution1[:]
+        optimal_solution.extend(optimal_solution2[:])
+        optimal = optimal1+optimal2
+        
+    return (optimal_solution,optimal)
 
 def construct_year(fall,winter,listed,dictionary):
         """
@@ -206,18 +292,18 @@ def index_year_courses(year_courses):
 
 def organize_by_course(solution):
         """
-        organize_by_course(self,solution) -> list of courses
+        organize_by_course(self,solution) -> dictionary of courses
 
         Returns a list of courses given a solution of strings
         """
         courses = {}
         for vertex in solution:
-            if vertex.session == "Y":
-                name = vertex.name+vertex.session
-                if name in courses:
-                    courses[name].append(vertex)
-                else:
-                    courses[name] = [vertex]
+            name = vertex.name+vertex.session
+            if name in courses:
+                courses[name].append(vertex)
+            else:
+                courses[name] = [vertex]
+        #print(courses)
         return courses
 
 
@@ -269,42 +355,22 @@ def generate():
     autotable = AutoTable()
     scraper = Scraper(autotable)
     autotable = scraper.build_table()
-    print("--- Scrapper time %s seconds ---" % (time.time() - start_time))  
     #builder = Builder(autotable)
     #autotable = builder.build_table()
+    print("--- Scrapper time %s seconds ---" % (time.time() - start_time))  
     start_time = time.time()
-    "Fall courses"
-    start_time_half = time.time()
-    courses = autotable.year.courses[:]
-    courses.extend(autotable.fall.courses)
-    fall_space = generate_semester(courses)
-    print(len(fall_space))
-    global count
-    print(count)
-    count = 0
-    print("--- Fall half year %s seconds ---" % (time.time() - start_time_half))  
-    "Winter courses"
-    start_time_half = time.time()
-    courses = autotable.year.courses[:]
-    courses.extend(autotable.winter.courses)
-    winter_space = generate_semester(courses)
-    print(len(winter_space))
-    print(count)
-    print("--- Winter half year %s seconds ---" % (time.time() - start_time_half)) 
-    "Year courses"
-    start_time_year = time.time()
-    listed,dictionary = index_year_courses(autotable.year.courses)
-    print("--- List year courses %s seconds ---" % (time.time() - start_time_year)) 
-    compatible = construct_year(fall_space,winter_space,listed,dictionary)
-    print("Fall:")
-    for section in compatible[0]:
-        print(section.name)
-        print(section)
-    print("Winter:")
-    for section in compatible[1]:
-        print(section.name)
-        print(section)
-    print("Distance: "+str(compatible[2]))
+    if len(autotable.year.courses[:]) > 0:
+        year_solutions = generate_year_courses(autotable.year.courses[:])
+    else:
+        year_solutions = []
+    compatible = fall_winter_merge(year_solutions, autotable.fall.courses[:], autotable.winter.courses[:])
+    print("Courses:")
+    courses = organize_by_course(compatible[0])
+    for course in courses:
+        print(courses[course][0].name)
+        for section in courses[course]:
+            print(str(section))
+    print("Distance: "+str(compatible[1]))
     print("--- Full algorithm %s seconds ---" % (time.time() - start_time))   
 
 if __name__ == "__main__":

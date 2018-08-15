@@ -41,7 +41,15 @@ class Scraper:
             hours = []
             for j in range(0, len(times), 2):
                 days.append(times[j][:3])
-                hours.append((int(times[j+1][:2]),int(times[j+1][6:8])))
+                start = int(times[j+1][:2])
+                if int(times[j+1][3:5]) != "00":
+                    minutes = float(times[j+1][3:5])/60
+                    start+=minutes
+                end = int(times[j+1][6:8])
+                if int(times[j+1][9:11]) != "00":
+                    minutes = float(times[j+1][9:11])/60
+                    end+=minutes 
+                hours.append((start,end))
             if 'Lec' in section[0]: #its bound to be one of these ifs
                 sec = Lecture(section[1], days, hours)
             if 'Tut' in section[0]:
@@ -63,6 +71,8 @@ class Scraper:
         
         self.scrape_course("ANT200Y1","Fall")
         self.scrape_course("CHM151Y1","Fall")
+        #self.scrape_course("VIC173Y1","Fall")
+        #self.scrape_course("VIC172Y1","Fall")
         self.scrape_course("SPA100Y1","Fall")
         
         #self.scrape_course("VIC001Y1","Fall")

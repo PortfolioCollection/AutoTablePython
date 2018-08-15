@@ -97,7 +97,7 @@ class Section(object):
     def __str__(self):
         string = ""
         for i in range(len(self.times)):
-            string += self.days[i]+" start: "+str(self.times[i][0])+" end: "+str(self.times[i][1])+"\n"
+            string += self.days[i]+" start: "+str(self.times[i][0]%24)+" end: "+str(self.times[i][1]%24)+"\n"
             string+="\t"
         #print(self.simmilar_times)
         return string[:-1] 
