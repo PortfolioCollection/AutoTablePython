@@ -21,10 +21,11 @@ class Course:
     def compress_times(self):
         for i in range(len(self.lectures)):
             for j in range(i):
-                if self.lectures[i].times == self.lectures[j].times:
-                    self.lectures[j].simmilar_times.append(self.lectures[i])
-                    self.lectures[i].simmilar_times = -1
-                    break
+                if self.lectures[i].days == self.lectures[j].days:
+                    if self.lectures[i].times == self.lectures[j].times:
+                        self.lectures[j].simmilar_times.append(self.lectures[i])
+                        self.lectures[i].simmilar_times = -1
+                        break
         i = 0
         while i < len(self.lectures):
             if self.lectures[i].simmilar_times == -1:
@@ -34,10 +35,11 @@ class Course:
 
         for i in range(len(self.tutorials)):
             for j in range(i):
-                if self.tutorials[i].times == self.tutorials[j].times:
-                    self.tutorials[j].simmilar_times.append(self.tutorials[i])
-                    self.tutorials[i].simmilar_times = -1
-                    break
+                if self.tutorials[i].days == self.tutorials[j].days:
+                    if self.tutorials[i].times == self.tutorials[j].times:
+                        self.tutorials[j].simmilar_times.append(self.tutorials[i])
+                        self.tutorials[i].simmilar_times = -1
+                        break
         i = 0
         while i < len(self.tutorials):
             if self.tutorials[i].simmilar_times == -1:
@@ -47,10 +49,11 @@ class Course:
 
         for i in range(len(self.practicals)):
             for j in range(i):
-                if self.practicals[i].times == self.practicals[j].times:
-                    self.practicals[j].simmilar_times.append(self.practicals[i])
-                    self.practicals[i].simmilar_times = -1
-                    break
+                if self.practicals[i].days == self.practicals[j].days:
+                    if self.practicals[i].times == self.practicals[j].times:
+                        self.practicals[j].simmilar_times.append(self.practicals[i])
+                        self.practicals[i].simmilar_times = -1
+                        break
         i = 0
         while i < len(self.practicals):
             if self.practicals[i].simmilar_times == -1:
@@ -82,10 +85,7 @@ class Section(object):
     def __init__(self,code,days,times):
         global day_list
         for i in range(len(days)):
-            for j in range(len(day_list)):
-                if day_list[j] == days[i]:
-                    break
-            times[i] = (times[i][0] + 24*j,times[i][1] + 24*j)
+            times[i] = (times[i][0],times[i][1])
         self.type = None
         self.name = None
         self.session = None
@@ -97,7 +97,7 @@ class Section(object):
     def __str__(self):
         string = ""
         for i in range(len(self.times)):
-            string += self.days[i]+" start: "+str(self.times[i][0]%24)+" end: "+str(self.times[i][1]%24)+"\n"
+            string += self.days[i][0]+" start: "+str(self.times[i][0]%24)+" end: "+str(self.times[i][1]%24)+"\n"
             string+="\t"
         #print(self.simmilar_times)
         return string[:-1] 
@@ -108,7 +108,7 @@ class Lecture(Section):
         self.type = "Lec"
 
     def __str__(self):
-        return self.type+self.code+":"+super(Lecture,self).__str__().strip()
+        return self.name+self.type+self.code+":"+super(Lecture,self).__str__().strip()
         
 
 class Tutorial(Section):
@@ -117,7 +117,7 @@ class Tutorial(Section):
         self.type = "Tut"
 
     def __str__(self):
-        return self.type+self.code+":"+super(Tutorial,self).__str__().strip()
+        return self.name+self.type+self.code+":"+super(Tutorial,self).__str__().strip()
 
 class Practical(Section):
     def __init__(self,code,days,times):
@@ -125,4 +125,14 @@ class Practical(Section):
         self.type = "Pra"
 
     def __str__(self):
-        return self.type+self.code+":"+super(Practical,self).__str__().strip()
+        return self.name+self.type+self.code+":"+super(Practical,self).__str__().strip()
+
+class Timeslot():
+    def __init__(self,name,day,time):
+        self.name = name
+        self.day = day
+        self.start = time[0]
+        self.end = time[1]
+
+    def __str__(self):
+        return self.name+" Day: "+self.day[0]+" Start: "+str(self.start)+" End: "+str(self.end)

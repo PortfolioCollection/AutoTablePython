@@ -3,6 +3,9 @@ from requests import get
 from Course import*
 from Session import*
 
+
+day_list = ["MON","TUE","WED","THU","FRI"]
+
 class Scraper:
 
     def __init__(self, AutoTable):
@@ -12,6 +15,7 @@ class Scraper:
         self.AutoTable.winter = Session("Winter")
     
     def scrape_course(self,course, session):
+        global day_list
         if 'fall' in session.lower():
             if course[6].lower() == 'y':
                 session = 'Y20189' #changes depending on year
@@ -40,7 +44,8 @@ class Scraper:
             days = [] #just so i can append
             hours = []
             for j in range(0, len(times), 2):
-                days.append(times[j][:3])
+                day = times[j][:3]
+                days.append([day,day_list.index(day)])
                 start = int(times[j+1][:2])
                 if int(times[j+1][3:5]) != "00":
                     minutes = float(times[j+1][3:5])/60
@@ -71,15 +76,11 @@ class Scraper:
         
         self.scrape_course("ANT200Y1","Fall")
         self.scrape_course("CHM151Y1","Fall")
-        #self.scrape_course("VIC173Y1","Fall")
-        #self.scrape_course("VIC172Y1","Fall")
         self.scrape_course("SPA100Y1","Fall")
-        
-        #self.scrape_course("VIC001Y1","Fall")
-
         
         self.scrape_course("MAT135H1","Fall")
         self.scrape_course("SOC100H1","Fall")
+        self.scrape_course("CSC108H5","Fall")
 
         
         self.scrape_course("MAT136H1","Winter")
